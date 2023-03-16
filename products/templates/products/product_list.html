@@ -1,45 +1,138 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
+<div class="flex flex-wrap justify-center items-center mx-8">
+  {% for product in products %}
+  <div
+    class="w-56 m-6 bg-white relative rounded-2xl shadow-lg hover:shadow-xl cursor-pointer relative"
+  >
+    <img
+      class="w-full h-48 rounded-2xl object-contain"
+      src="{{ product.image_url }}"
+      alt="{{ product.name }}"
+    />
+    {% if user.is_authenticated %}
+    <div
+      class="following absolute top-0 right-0 m-3"
+      data-action="{% url 'products:toggle_following' product.id %}"
+    >
+      <svg
+        data-product-id="{{ product.id }}"
+        class="{% if product.is_following %}hidden{% endif %} fill-rose-500 bi bi-heart"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="currentColor"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"
+        />
+      </svg>
+      <svg
+        data-product-id="{{ product.id }}"
+        class="{% if not product.is_following %}hidden{% endif %} fill-rose-500 bi bi-heart-fill"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="currentColor"
+        viewBox="0 0 16 16"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+        />
+      </svg>
+    </div>
+    {% endif %}
+    <div class="m-3 flex flex-col">
+      <div>
+        {% if product.latest_price %}
+        <span class="text-2xl">${{ product.latest_price|floatformat }}</span>
+        {% endif %} {% if product.price_diff %}
+        <span
+          class="{% if product.price_diff < 0 %}text-green-500{% elif product.price_diff > 0 %}text-red-500{% endif %} text-sm"
+        >
+          ${{ product.price_diff|floatformat }}
+        </span>
+        {% endif %}
+      </div>
+      <span class="text-sm line-clamp-1 hover:line-clamp-none"
+        >{{ product.name }}</span
+      >
+    </div>
+  </div>
+  {% endfor %}
+</div>
 
-{% block content %}
-<h1>Products</h1>
-{% for product in products %}
-<p>
-  {{ product.name }}<br />
-  <img src="{{ product.image_url }}" alt="{{ product.name }}" width="200" /><br />
-  ${{ product.latest_price }} {{ product.price_diff }} {{product.latest_price_registered_at}}
-  {% if user.is_authenticated %}
-  <form class="follow-form" action="{% url 'products:toggle_following' product.id %}" method="post">
-    {% csrf_token %}
-    <input type="submit" value="{% if product.is_following %} Unfollow {% else %} Follow {% endif %}" />
-  </form>
-  {% endif %}
-</p>
-{% endfor %} {% endblock %}
+<div class="flex justify-center mb-16">
+  <nav aria-label="Page navigation example">
+    <ul class="list-style-none flex">
+      <li>
+        <a
+          href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% endif %}"
+          class="{% if not page_obj.has_previous %} pointer-events-none text-neutral-500 {% else %} text-neutral-600 hover:bg-neutral-100 {% endif %} relative block rounded bg-transparent py-1.5 px-3 text-lg transition-all duration-300"
+          >Anterior</a
+        >
+      </li>
 
+      {% for i in page_obj.paginator.page_range %} {% if page_obj.number == i %}
+      <li aria-current="page">
+        <a
+          class="relative block rounded bg-primary-100 py-1.5 px-3 text-lg font-medium text-primary-700 transition-all duration-300"
+          href="#!"
+          >{{ i }}
+          <span
+            class="absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0 [clip:rect(0,0,0,0)]"
+            >(current)</span
+          >
+        </a>
+      </li>
+      {% else %}
 
-{% block js %}
+      <li>
+        <a
+          class="relative block rounded bg-transparent py-1.5 px-3 text-lg text-neutral-600 transition-all duration-300 hover:bg-neutral-100"
+          href="?page={{i}}"
+          >{{ i }}</a
+        >
+      </li>
+      {% endif %} {% endfor %}
+      <li>
+        <a
+          href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% endif%}"
+          class="{% if not page_obj.has_next %} pointer-events-none text-neutral-500 {% else %} text-neutral-600 hover:bg-neutral-100 {% endif %} relative block rounded bg-transparent py-1.5 px-3 text-lg transition-all duration-300"
+          >Siguiente</a
+        >
+      </li>
+    </ul>
+  </nav>
+</div>
+
+{% endblock %} {% comment %} JS {% endcomment %} {% block js %}
 <script>
-  document.querySelectorAll('.follow-form').forEach((it) => {
-    it.addEventListener('submit', (e) => { 
+  document.querySelectorAll(".following").forEach((it) => {
+    it.addEventListener("click", (e) => {
       e.preventDefault();
-      const form = e.target;
-      const formData = new FormData(form);
-      const url = form.action;
-      const method = form.method;
-      fetch(url, {
-        method,
-        body: formData,
+      fetch(it.dataset.action, {
+        method: "POST",
+        body: {
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           "X-Requested-With": "XMLHttpRequest",
-          "HTTP_X_REQUESTED_WITH": "XMLHttpRequest",
+          HTTP_X_REQUESTED_WITH: "XMLHttpRequest",
           "X-CSRFToken": "{{ csrf_token }}",
-        }})
+        },
+      })
         .then((response) => response.json())
         .then((data) => {
-          const button = form.querySelector('input[type="submit"]');
-          button.value = data.is_following ? 'Unfollow' : 'Follow';
-        }).catch((error) => {console.log(error)});
+          it.querySelectorAll("svg").forEach((svg) => {
+            svg.classList.toggle("hidden");
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     });
   });
 </script>

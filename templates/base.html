@@ -4,11 +4,86 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
     <title>{% block title %}Malitracker{% endblock %}</title>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              mercadoLibre: "#fff159",
+              oscuro: "#2D2727",
+              azul: "#00235B,",
+            },
+          },
+        },
+      };
+    </script>
     {% block css %} {% endblock %}
   </head>
-  <body>
-    {% block content %} {% endblock %}
-    {% block js %} {% endblock %}
+  <body class="bg-[#ededed]">
+    <header class="w-full h-1/5">
+      <nav
+        class="flex items-center justify-between flex-wrap bg-mercadoLibre p-6"
+      >
+        <div class="flex items-center flex-shrink-0 text-[#00235B] mr-6">
+          <span class="font-semibold text-xl tracking-tight">Malitracker</span>
+        </div>
+        <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+          <div class="text-sm lg:flex-grow">
+            <a
+              href="{% url 'products:list_products' %}"
+              class="active:text-[#B2B1B9] text-[#00235B] block mt-4 lg:inline-block lg:mt-0 hover:text-[#B2B1B9] mr-4"
+            >
+              Productos
+            </a>
+            <a
+              href="#"
+              class="active:text-[#B2B1B9] text-[#00235B] block mt-4 lg:inline-block lg:mt-0 hover:text-[#B2B1B9] mr-4"
+            >
+              Otra wea
+            </a>
+            <a
+              href="#"
+              class="active:text-[#B2B1B9] text-[#00235B] block mt-4 lg:inline-block lg:mt-0 hover:text-[#B2B1B9]"
+            >
+              Otra wea
+            </a>
+          </div>
+          {% if user.is_authenticated %}
+          <div>
+            <a
+              href="#"
+              class="block mx-4 mt-4 lg:inline-block text-[#00235B] lg:mt-0"
+            >
+              {{ user.username }}
+            </a>
+            <a
+              href="{% url 'logout' %}"
+              class="block mx-4 mt-4 lg:inline-block text-[#00235B] lg:mt-0"
+            >
+              Cerrar sesión
+            </a>
+          </div>
+          {% else %}
+          <div>
+            <a
+              href="{% url 'login' %}"
+              class="block mx-4 mt-4 lg:inline-block text-[#00235B] lg:mt-0"
+            >
+              Iniciar sesión
+            </a>
+            <a
+              href="{% url 'signup' %}"
+              class="block mx-4 mt-4 lg:inline-block text-[#00235B] lg:mt-0"
+            >
+              Registrarse
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </nav>
+    </header>
+    {% block content %} {% endblock %} {% block js %} {% endblock %}
   </body>
 </html>

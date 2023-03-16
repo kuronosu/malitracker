@@ -35,7 +35,7 @@ def following_to_model(following):
 class ListProductsView(ListView):
     model = Product
     context_object_name = 'products'
-    paginate_by = 10
+    paginate_by = 20
     ordering = ['-pk']
 
     def get_queryset(self):
