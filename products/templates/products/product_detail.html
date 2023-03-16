@@ -78,7 +78,7 @@
       </figure>
 
       {% for price in prices %}
-      <div class="flex items-center justify-self-auto m-5">
+      <div class="flex items-center justify-between m-5">
         <p class="m-5">{{ price.price }} - {{ price.registered_at }}</p>
         {% if user.is_authenticated and user.is_staff %}
         <div>
