@@ -1,4 +1,46 @@
 {% extends "base.html" %} {% block content %}
+<form method="get" action="" class="mt-4 mb-4 w-full flex content-center justify-center">
+  <div class="flex w-3/4 min-w-[500px] mt-3 items-end justify-end gap-6">
+    <div class="w-1/2">
+      <label for="search" class="block mb-2 text-sm font-medium text-gray-900">Buscar</label>
+      <input
+      id="search"
+      class="p-2 w-full rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+      type="text"
+      name="q"
+      value="{% if q %}{{ q }}{% endif %}"
+      placeholder="Buscar producto"
+      />
+    </div>
+    {% if user.is_authenticated %}
+    <div>
+      <label for="following" class="block mb-2 text-sm font-medium text-gray-900">Filtrar</label>
+      <select id="following" name="following" class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-transparent focus:ring-blue-500 focus:border-blue-500">
+        <option {% if following != "following" and following != "not-following" %} selected {% endif %} value="all" selected>Todos</option>
+        <option {% if following == "following" %} selected {% endif %} value="following">Seguidos</option>
+        <option {% if following == "not-following" %} selected {% endif %} value="not-following">No seguidos</option>
+      </select>
+    </div>
+    {% endif %}
+    <div>
+      <label for="order" class="block mb-2 text-sm font-medium text-gray-900">Orden</label>
+      <select id="order" name="order" class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-transparent focus:ring-blue-500 focus:border-blue-500">
+        <option {% if order == "id" %} selected {% endif %} value="id">Primero registrado</option>
+        <option {% if order == "-id" %} selected {% endif %} value="-id">Ultimo registrado</option>
+        <option {% if order == "updated" %} selected {% endif %} value="updated">Actualizado recientemente</option>
+        <option {% if order == "-updated" %} selected {% endif %} value="-updated">Actualizado recientemente descendente</option>
+        <option {% if order == "price" %} selected {% endif %} value="price">Precio ascendente</option>
+        <option {% if order == "-price" %} selected {% endif %} value="-price">Precio descendente</option>
+        <option {% if order == "name" %} selected {% endif %} value="name">Nombre</option>
+        <option {% if order == "-name" %} selected {% endif %} value="-name">Nombre descendente</option>
+      </select>
+    </div>
+    <div>
+      <button type="submit" class="cursor-pointer rounded-lg bg-blue-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">Enviar</button>
+    </div>
+  </div>
+
+</form>
 <div class="flex flex-wrap justify-center items-center mx-8">
   {% for product in products %}
   <a href="{% url 'products:detail_product' product.id %}">
