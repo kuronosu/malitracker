@@ -55,7 +55,7 @@
               {{ user.username }}
             </a>
             <a
-              href="{% url 'logout' %}"
+              href="{% url 'accounts:logout' %}"
               class="block mx-4 mt-4 lg:inline-block text-[#00235B] lg:mt-0"
             >
               Cerrar sesión
@@ -64,13 +64,13 @@
           {% else %}
           <div>
             <a
-              href="{% url 'login' %}"
+              href="{% url 'accounts:login' %}"
               class="block mx-4 mt-4 lg:inline-block text-[#00235B] lg:mt-0"
             >
               Iniciar sesión
             </a>
             <a
-              href="{% url 'signup' %}"
+              href="{% url 'accounts:signup' %}"
               class="block mx-4 mt-4 lg:inline-block text-[#00235B] lg:mt-0"
             >
               Registrarse
