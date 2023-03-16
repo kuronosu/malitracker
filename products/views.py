@@ -3,7 +3,7 @@ from django.db.models import (BooleanField, Case, DecimalField, Exists, F,
                               OuterRef, Q, Subquery, Value, When)
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import ListView, View
+from django.views.generic import ListView, View, DetailView
 
 from .models import PriceRecord, Product
 
@@ -88,6 +88,19 @@ class ListProductsView(ListView):
             queryset = queryset.order_by(order)
 
         return queryset
+
+
+class ProductDetailView(DetailView):
+    model = Product
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['prices'] = self.object.prices.all().order_by('-registered_at')
+        context['is_following'] = False
+        if self.request.user.is_authenticated:
+            context['is_following'] = self.object.followers.filter(
+                id=self.request.user.id).exists()
+        return context
 
 
 class ToggleFollowingView(LoginRequiredMixin, View):

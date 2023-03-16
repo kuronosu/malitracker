@@ -1,0 +1,89 @@
+{% extends "base.html" %} {% block content %}
+
+<h1>{{ product.name }}</h1>
+
+{% if user.is_authenticated and user.is_staff %}
+<div>
+  <a href="{% comment %} {% url 'products:edit' product.id %} {% endcomment %}"
+    >Editar</a
+  >
+  <a
+    href="{% comment %} {% url 'products:delete' product.id %} {% endcomment %}"
+    >Eliminar</a
+  >
+  <a
+    href="{% comment %} {% url 'products:add_price' product.id %} {% endcomment %}"
+    >Registrar precio</a
+  >
+</div>
+{% endif %} {% if user.is_authenticated %}
+<div
+  class="following m-3"
+  data-action="{% url 'products:toggle_following' product.id %}"
+>
+  <svg
+    data-product-id="{{ product.id }}"
+    class="{% if is_following %}hidden{% endif %} fill-rose-500 bi bi-heart"
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    fill="currentColor"
+    viewBox="0 0 16 16"
+  >
+    <path
+      d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"
+    />
+  </svg>
+  <svg
+    data-product-id="{{ product.id }}"
+    class="{% if not is_following %}hidden{% endif %} fill-rose-500 bi bi-heart-fill"
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    fill="currentColor"
+    viewBox="0 0 16 16"
+  >
+    <path
+      fill-rule="evenodd"
+      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+    />
+  </svg>
+</div>
+{% endif %}
+
+<a href="{{ product.url }}"> Ver en mercado libre</a>
+
+<img src="{{ product.image_url }}" alt="{{ product.name }}" />
+
+{% for price in prices %}
+<p>{{ price.price }} - {{ price.registered_at }}</p>
+{% endfor %} {% endblock %} {% block js %}
+<script>
+  document.querySelectorAll(".following").forEach((it) => {
+    it.addEventListener("click", (e) => {
+      e.preventDefault();
+      fetch(it.dataset.action, {
+        method: "POST",
+        body: {
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+          HTTP_X_REQUESTED_WITH: "XMLHttpRequest",
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          it.querySelectorAll("svg").forEach((svg) => {
+            svg.classList.toggle("hidden");
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+  });
+</script>
+{% endblock %}
