@@ -1,6 +1,54 @@
 {% extends "base.html" %} {% block content %}
-<form method="post">
-  {% csrf_token %} {{ form.as_p }}
-  <input type="submit" value="Guardar producto" />
-</form>
+<main class="flex justify-center mt-16" >
+  <div class="bg-white p-8 rounded-md w-1/5 ">
+    <h1 class="text-4xl mb-20" >Registro de producto</h1>
+      <form method="POST" class="w-full" >
+        {% csrf_token %}
+          <div class="relative z-0 w-full mb-6 group">
+              <label for="id_image_url" class="peer-focus:font-medium  text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" >Name:</label>
+              <input
+                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                type="text"
+                name="name"
+                value="{% if form.name.value %}{{form.name.value}}{% endif %}"
+                maxlength="100"
+                required=""
+                id="id_name"
+              />
+              <p class="text-red-500 text-xs italic">{{form.name.errors}}</p>
+          </div>
+          <div class="relative z-0 w-full mb-6 group">
+              <label for="id_url" class="peer-focus:font-medium  text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" >Url:</label>
+              <input
+                class=" block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                type="url"
+                name="url"
+                value="{% if form.url.value %}{{form.url.value}}{% endif %}"
+                maxlength="200"
+                required=""
+                id="id_url"
+              />
+              <p class="text-red-500 text-xs italic">{{form.url.errors}}</p>
+          </div>
+          <div class="relative z-0 w-full mb-6 group">
+              <label for="id_image_url" class="peer-focus:font-medium  text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" >Image url:</label>
+              <input
+                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                type="url"
+                name="image_url"
+                value="{% if form.image_url.value %}{{form.image_url.value}}{% endif %}"
+                maxlength="200"
+                id="id_image_url"
+              />
+              <p class="text-red-500 text-xs italic">{{form.image_url.errors}}</p>
+          </div>
+          <input 
+            class="cursor-pointer rounded-lg bg-blue-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            type="submit"  
+            value="Guardar producto" 
+          />
+        </form>
+        
+  </div>
+</main>
 {% endblock %}

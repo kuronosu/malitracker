@@ -1,6 +1,31 @@
 {% extends "base.html" %} {% block content %}
-<form method="post">
-  {% csrf_token %} {{ form.as_p }}
-  <input type="submit" value="Guardar registro" />
-</form
+<main class="flex justify-center mt-16" >
+  <div class="flex justify-center bg-white rounded-md py-3 px-6 my-5" >
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="" value=""> 
+      <div>
+        <label 
+          class="peer-focus:font-medium  text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+          for="id_price">
+          Price:
+        </label>
+        <input 
+          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          type="number" 
+          name="price" 
+          step="0.01" 
+          required="" 
+          id="id_price"
+        >
+      </div>
+      <input 
+        class=" m-3 rounded-lg bg-blue-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+        type="submit" 
+        value="Guardar registro"
+      >
+    </form>
+  </div>
+</main>
 {% endblock %}
+

@@ -1,14 +1,24 @@
 {%extends 'base.html'%} {%block content%}
-<div>
-  <form method="post">
-    {% csrf_token %}
-    <h2>Borrar producto</h2>
-    <p>¿Estás seguro de que quieres borrar el producto "{{product.name}}"?</p>
-    <p>
-      <input type="submit" value="Borrar" />
-      <a href="{% url 'products:detail_product' product.id %}">Cancelar</a>
-    </p>
-  </form>
-</div>
+<main class="flex justify-center mt-16" >
+  <div class="flex justify-center bg-white rounded-md py-3 px-6 my-5 w-1/4 " >
+    <form method="post">
+      {% csrf_token %}
+      <h2 class="text-xl my-5" >Borrar producto</h2>
+      <p>¿Estás seguro de que quieres borrar el producto "{{product.name}}"?</p>
+      <div class="my-5" >
+        <input 
+          class="mr-3 rounded-lg bg-red-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-red-500/20 transition-all hover:shadow-lg hover:shadow-red-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" 
+          type="submit" 
+          value="Borrar" 
+        />
+        <a 
+          class="mx-3 rounded-lg bg-blue-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+          href="{% url 'products:detail_product' product.id %}">
+          Cancelar
+        </a>
+      </div>
+    </form>
+  </div>
+</main>
 
 {%endblock content%}
