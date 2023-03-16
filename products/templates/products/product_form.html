@@ -15,7 +15,7 @@
                 required=""
                 id="id_name"
               />
-              <p class="text-red-500 text-xs italic">{{form.name.errors}}</p>
+              <p class="text-red-500 text-xs italic">{% for error in form.name.errors %}{{error}}<br>{% endfor %}</p>
           </div>
           <div class="relative z-0 w-full mb-6 group">
               <label for="id_url" class="peer-focus:font-medium  text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" >Url:</label>
@@ -28,7 +28,7 @@
                 required=""
                 id="id_url"
               />
-              <p class="text-red-500 text-xs italic">{{form.url.errors}}</p>
+              <p class="text-red-500 text-xs italic">{% for error in form.url.errors %}{{error}}<br>{% endfor %}</p>
           </div>
           <div class="relative z-0 w-full mb-6 group">
               <label for="id_image_url" class="peer-focus:font-medium  text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" >Image url:</label>
@@ -40,8 +40,11 @@
                 maxlength="200"
                 id="id_image_url"
               />
-              <p class="text-red-500 text-xs italic">{{form.image_url.errors}}</p>
+              <p class="text-red-500 text-xs italic">{% for error in form.image_url.errors %}{{error}}<br>{% endfor %}</p>
           </div>
+          {% for error in form.non_field_errors %}
+          <p class="text-red-500 text-xs italic mb-2">{{error}}</p>
+          {% endfor %}
           <input 
             class="cursor-pointer rounded-lg bg-blue-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             type="submit"  
