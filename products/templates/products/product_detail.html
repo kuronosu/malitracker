@@ -1,59 +1,95 @@
 {% extends "base.html" %} {% block content %}
 
-<h1>{{ product.name }}</h1>
-
-{% if user.is_authenticated and user.is_staff %}
-<div>
-  <a href="{% url 'products:update_product' product.id %}">Editar</a>
-  <a href="{% url 'products:delete_product' product.id %}">Eliminar</a>
-  <a href="{% url 'products:add_price' product.id %}">Registrar precio</a>
-</div>
-{% endif %} {% if user.is_authenticated %}
-<div
-  class="following m-3"
-  data-action="{% url 'products:toggle_following' product.id %}"
->
-  <svg
-    data-product-id="{{ product.id }}"
-    class="{% if is_following %}hidden{% endif %} fill-rose-500 bi bi-heart"
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    fill="currentColor"
-    viewBox="0 0 16 16"
-  >
-    <path
-      d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"
-    />
-  </svg>
-  <svg
-    data-product-id="{{ product.id }}"
-    class="{% if not is_following %}hidden{% endif %} fill-rose-500 bi bi-heart-fill"
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    fill="currentColor"
-    viewBox="0 0 16 16"
-  >
-    <path
-      fill-rule="evenodd"
-      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
-    />
-  </svg>
-</div>
-{% endif %}
-
-<a href="{{ product.url }}"> Ver en mercado libre</a>
-
-<img src="{{ product.image_url }}" alt="{{ product.name }}" />
-
-{% for price in prices %}
-<p>
-  {{ price.price }} - {{ price.registered_at }}
-  <a href="{% url 'products:delete_price' product.id price.id %}">Eliminar</a>
-</p>
-
-{% endfor %} {% endblock %} {% block js %}
+<div class="flex justify-center">
+  <div class=" bg-white rounded-md py-3 px-6 my-5 " >
+    <div>
+      <div class="flex justify-center items-center" >
+        <h1 class="text-xl my-5 " >{{ product.name }}</h1>
+        <div
+        class="following m-5 "
+        data-action="{% url 'products:toggle_following' product.id %}"
+        >
+        <svg
+          data-product-id="{{ product.id }}"
+          class="{% if is_following %}hidden{% endif %} fill-rose-500 bi bi-heart cursor-pointer"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="currentColor"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"
+          />
+        </svg>
+        <svg
+          data-product-id="{{ product.id }}"
+          class="{% if not is_following %}hidden{% endif %} fill-rose-500 bi bi-heart-fill"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="currentColor"
+          viewBox="0 0 16 16"
+        >
+          <path
+            class="cursor-pointer"
+            fill-rule="evenodd"
+            d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+          />
+        </svg>
+      </div>
+      </div>
+      {% if user.is_authenticated and user.is_staff %}
+      <div  >
+        <a 
+          class="mx-3 rounded-lg bg-blue-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+          href="{% url 'products:update_product' product.id %}">
+          Editar
+        </a>
+        <a
+          class=" mx-3 rounded-lg bg-red-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+          href="{% url 'products:delete_product' product.id %}">
+          Eliminar
+        </a>
+        <a 
+          class="mx-3 rounded-lg bg-green-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+          href="{% url 'products:add_price' product.id %}">
+          Registrar precio
+        </a>
+      </div>
+      {% endif %} {% if user.is_authenticated %}
+      {% endif %}
+  
+      <div class="my-8" >
+        <a
+        class=" mx-3 text-[#00235B] rounded-lg bg-[#fff159] py-3 px-6 font-sans text-xs font-bold uppercase shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+        href="{{ product.url }}"> 
+        Ver en mercado libre
+      </a>
+      </div>
+  
+      <figure class="m-5 flex justify-center" >
+        <img  src="{{ product.image_url }}" alt="{{ product.name }}" />
+      </figure>
+  
+      {% for price in prices %}
+      <div class="flex items-center justify-self-auto m-5" >
+        <p class="m-5" >{{ price.price }} - {{ price.registered_at }}</p>
+        {% if user.is_authenticated and user.is_staff %}
+        <div >
+          <a 
+            class="rounded-lg bg-red-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-red-500/20 transition-all hover:shadow-lg hover:shadow-red-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" 
+            href="{% url 'products:delete_price' product.id price.id %}">
+            Eliminar
+          </a>
+        </div>
+        {% endif %} 
+      </div>
+      {% endfor %} {% endblock %} 
+    </div>
+  </div> 
+</div> 
+{% block js %}
 <script>
   document.querySelectorAll(".following").forEach((it) => {
     it.addEventListener("click", (e) => {
