@@ -1,5 +1,11 @@
-<form method='POST'>
-{% csrf_token %}
-{{ form.as_p }}
-<input type='submit' value='Submit' />
-</form>
+{% extends "base.html" %} {% block content %}
+<div>
+  <h1>Ingresar</h1>
+  <p>Por favor, complete los siguientes campos:</p>
+
+  <form method="POST">
+    {% csrf_token %} {{ form.as_p }}
+    <input type="submit" value="Submit" />
+  </form>
+</div>
+{% endblock %}
