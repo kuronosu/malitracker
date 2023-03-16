@@ -1,0 +1,22 @@
+{%extends 'base.html'%} {%block content%}
+<div>
+  <form method="post">
+    {% csrf_token %}
+    <h2>
+      Eliminar registro de precio
+    </h2>
+    <p>
+      ¿Estás seguro de que quieres borrar el registro {{price_record.price}} de
+      {{price_record.product.name}} de la fecha
+      {{price_record.registered_at}}?
+    </p>
+    <p>
+      <input type="submit" value="Borrar" />
+      <a href="{% url 'products:detail_product' price_record.product.id %}"
+        >Cancelar</a
+      >
+    </p>
+  </form>
+</div>
+
+{%endblock content%}

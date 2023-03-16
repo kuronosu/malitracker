@@ -4,17 +4,9 @@
 
 {% if user.is_authenticated and user.is_staff %}
 <div>
-  <a href="{% comment %} {% url 'products:edit' product.id %} {% endcomment %}"
-    >Editar</a
-  >
-  <a
-    href="{% comment %} {% url 'products:delete' product.id %} {% endcomment %}"
-    >Eliminar</a
-  >
-  <a
-    href="{% url 'products:add_price' product.id %}"
-    >Registrar precio</a
-  >
+  <a href="{% url 'products:update_product' product.id %}">Editar</a>
+  <a href="{% url 'products:delete_product' product.id %}">Eliminar</a>
+  <a href="{% url 'products:add_price' product.id %}">Registrar precio</a>
 </div>
 {% endif %} {% if user.is_authenticated %}
 <div
@@ -56,7 +48,11 @@
 <img src="{{ product.image_url }}" alt="{{ product.name }}" />
 
 {% for price in prices %}
-<p>{{ price.price }} - {{ price.registered_at }}</p>
+<p>
+  {{ price.price }} - {{ price.registered_at }}
+  <a href="{% url 'products:delete_price' product.id price.id %}">Eliminar</a>
+</p>
+
 {% endfor %} {% endblock %} {% block js %}
 <script>
   document.querySelectorAll(".following").forEach((it) => {

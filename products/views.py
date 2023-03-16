@@ -1,9 +1,11 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import (BooleanField, Case, DecimalField, Exists, F,
                               OuterRef, Q, Subquery, Value, When)
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import CreateView, DetailView, ListView, View
+from django.urls import reverse_lazy
+from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
+                                  UpdateView, View)
 
 from products.mixins import IsStaffMixin
 
@@ -23,14 +25,6 @@ def order_to_model(order):
         return 'last_update_at'
     elif order == 'name' or order == '-name':
         return order
-    return None
-
-
-def following_to_model(following):
-    if following == '1':
-        return True
-    elif following == '0':
-        return False
     return None
 
 
@@ -122,6 +116,27 @@ class AddPriceView(LoginRequiredMixin, IsStaffMixin, CreateView):
     def form_valid(self, form):
         form.instance.product = self.product
         return super().form_valid(form)
+
+
+class UpdateProductView(LoginRequiredMixin, IsStaffMixin, UpdateView):
+    model = Product
+    fields = ['name', 'url', 'image_url']
+
+
+class DeleteProductView(LoginRequiredMixin, IsStaffMixin, DeleteView):
+    model = Product
+    success_url = reverse_lazy('products:list_products')
+
+
+class DeletePriceView(LoginRequiredMixin, IsStaffMixin, DeleteView):
+    model = PriceRecord
+    context_object_name = 'price_record'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(PriceRecord, pk=self.kwargs['pk'], product__pk=self.kwargs['product_pk'])
+
+    def get_success_url(self):
+        return self.object.product.get_absolute_url()
 
 
 class ToggleFollowingView(LoginRequiredMixin, View):
