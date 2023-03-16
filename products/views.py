@@ -25,6 +25,10 @@ def order_to_model(order):
         return 'last_update_at'
     elif order == 'name' or order == '-name':
         return order
+    elif order == 'id':
+        return 'pk'
+    elif order == '-id':
+        return '-pk'
     return None
 
 
@@ -40,9 +44,9 @@ class ListProductsView(ListView):
         # filter by following or not
         following = self.request.GET.get('following', None)
         if following is not None and self.request.user.is_authenticated:
-            if following == '1':
+            if following == 'following':
                 queryset = queryset.filter(followers__in=[self.request.user])
-            elif following == '0':
+            elif following == 'not-following':
                 queryset = queryset.exclude(followers__in=[self.request.user])
 
         # search by name
@@ -84,6 +88,13 @@ class ListProductsView(ListView):
             queryset = queryset.order_by(order)
 
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['following'] = self.request.GET.get('following', None)
+        context['q'] = self.request.GET.get('q', None)
+        context['order'] = self.request.GET.get('order', None)
+        return context
 
 
 class ProductDetailView(DetailView):
