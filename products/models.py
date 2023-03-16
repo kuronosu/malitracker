@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.urls import reverse_lazy
 
 # Create your models here.
 
@@ -16,6 +17,9 @@ class Product(models.Model):
     def __str__(self):
         return f'{self.name} ({self.url})'
 
+    def get_absolute_url(self):
+        return reverse_lazy('products:detail_product', kwargs={'pk': self.pk})
+
 
 class PriceRecord(models.Model):
     product = models.ForeignKey(
@@ -25,3 +29,6 @@ class PriceRecord(models.Model):
 
     def __str__(self):
         return f'{self.product.name} ${self.price} ({self.registered_at})'
+
+    def get_absolute_url(self):
+        return self.product.get_absolute_url()

@@ -37,23 +37,19 @@
             >
               Productos
             </a>
+            {% if user.is_authenticated and user.is_staff %}
             <a
-              href="#"
+              href="{% url 'products:create_product' %}"
               class="active:text-[#B2B1B9] text-[#00235B] block mt-4 lg:inline-block lg:mt-0 hover:text-[#B2B1B9] mr-4"
             >
-              Otra wea
+              Añadir producto
             </a>
-            <a
-              href="#"
-              class="active:text-[#B2B1B9] text-[#00235B] block mt-4 lg:inline-block lg:mt-0 hover:text-[#B2B1B9]"
-            >
-              Otra wea
-            </a>
+            {% endif %}
           </div>
           {% if user.is_authenticated %}
           <div>
             <a
-              href="#"
+              href="#!"
               class="block mx-4 mt-4 lg:inline-block text-[#00235B] lg:mt-0"
             >
               {{ user.username }}

@@ -1,9 +1,11 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import (BooleanField, Case, DecimalField, Exists, F,
                               OuterRef, Q, Subquery, Value, When)
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import ListView, View, DetailView
+from django.views.generic import CreateView, DetailView, ListView, View
+
+from products.mixins import IsStaffMixin
 
 from .models import PriceRecord, Product
 
@@ -101,6 +103,25 @@ class ProductDetailView(DetailView):
             context['is_following'] = self.object.followers.filter(
                 id=self.request.user.id).exists()
         return context
+
+
+class CreateProductView(LoginRequiredMixin, IsStaffMixin, CreateView):
+    model = Product
+    fields = ['name', 'url', 'image_url']
+
+
+class AddPriceView(LoginRequiredMixin, IsStaffMixin, CreateView):
+    model = PriceRecord
+    fields = ['price']
+    product = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.product = get_object_or_404(Product, pk=self.kwargs['pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.product = self.product
+        return super().form_valid(form)
 
 
 class ToggleFollowingView(LoginRequiredMixin, View):
